@@ -19,9 +19,17 @@ public class SMTPClient implements client.ISMTPClient {
     private PrintWriter writer;
 
 
-    public void connect(String server, int port){
+    private String serverAdress;
+    private int serverPort;
+
+    public SMTPClient(String serverAdress, int serverPort){
+        this.serverAdress = serverAdress;
+        this.serverPort = serverPort;
+    }
+
+    private void connect(){
         try {
-            clientSocket = new Socket(server, port);
+            clientSocket = new Socket(serverAdress, serverPort);
             reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             writer = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
             skipServerMessage(4); // skip welcome messages
@@ -33,6 +41,8 @@ public class SMTPClient implements client.ISMTPClient {
 
     @Override
     public void sendMail(Mail mail) {
+        connect(); // connect to the server
+
         LOG.log(Level.INFO, "### Start to send an email");
 
         // EHLO
