@@ -6,7 +6,7 @@ import model.mail.Mail;
 import java.net.Socket;
 import java.util.LinkedList;
 
-public class SMTPClient implements ISMTPClient{
+public class SMTPClient implements client.ISMTPClient {
     private Socket socket;
 
     public SMTPClient(String server){
