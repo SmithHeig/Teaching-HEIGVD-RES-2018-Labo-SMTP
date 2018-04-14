@@ -39,8 +39,12 @@ public class SMTPClient implements client.ISMTPClient {
         }
     }
 
+    private void disconnect(){
+        sendToServer("quit");
+    }
+
     @Override
-    public void sendMail(Mail mail) {
+    public void sendMail(Mail ... mails) {
         connect(); // connect to the server
 
         LOG.log(Level.INFO, "### Start to send an email");
@@ -49,34 +53,36 @@ public class SMTPClient implements client.ISMTPClient {
         sendToServer("EHLO local");
         skipServerMessage(7); // skip cmd
 
-        // MAIL FROM
-        sendToServer("MAIL FROM: " + mail.getFrom().getEmail());
-        skipServerMessage();
-
-        // MAIL TO
-        for(Person p: mail.getTo()){
-            sendToServer("RCPT TO: " + p.getEmail());
+        for(Mail mail: mails) {
+            // MAIL FROM
+            sendToServer("MAIL FROM: " + mail.getFrom().getEmail());
             skipServerMessage();
-        }
 
-        // MAIL CC
-        for(Person p: mail.getCc()){
-            sendToServer("RCPT TO: " + p.getEmail());
+            // MAIL TO
+            for (Person p : mail.getTo()) {
+                sendToServer("RCPT TO: " + p.getEmail());
+                skipServerMessage();
+            }
+
+            // MAIL CC
+            for (Person p : mail.getCc()) {
+                sendToServer("RCPT TO: " + p.getEmail());
+                skipServerMessage();
+            }
+
+            // DATA
+            sendToServer("DATA");
             skipServerMessage();
+
+            // DATA content
+            Scanner scanner = new Scanner(mail.getContent());
+            while (scanner.hasNext()) {
+                sendToServer(scanner.nextLine());
+            }
+            sendToServer("."); // end of content
+            LOG.log(Level.INFO, "Mail send");
         }
-
-        // DATA
-        sendToServer("DATA");
-        skipServerMessage();
-
-        // DATA content
-        Scanner scanner = new Scanner(mail.getContent());
-        while(scanner.hasNext()){
-            sendToServer(scanner.nextLine());
-        }
-        sendToServer("."); // end of content
-
-        LOG.log(Level.INFO, "Mail send");
+        disconnect();
     }
 
     private void skipServerMessage(){

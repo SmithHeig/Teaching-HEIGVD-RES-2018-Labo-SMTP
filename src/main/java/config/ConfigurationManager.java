@@ -8,8 +8,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ConfigurationManager implements IConfigurationManager {
+    private final static Logger LOG = Logger.getLogger(ConfigurationManager.class.getName());
+
     private String serverAdress;
     private int serverPort;
     private LinkedList<Person> victims;
@@ -21,6 +25,8 @@ public class ConfigurationManager implements IConfigurationManager {
         loadAdressesFromFile("./config/victims.utf8");
         loadMessageFromFile("./config/messages.utf8");
         loadProperties("./config/config.properties");
+
+        verify();
     }
 
     private void loadProperties(String file) throws IOException {
@@ -58,6 +64,15 @@ public class ConfigurationManager implements IConfigurationManager {
         }
         in.close();
     }
+
+    private void verify(){
+        // Test if enogh number of victims compare to nb groups
+        if(victims.size() / nbGroups < 3){
+            LOG.log(Level.SEVERE, "ERROR - Too much groups compare to number of victimes please change your configuration");
+            System.exit(-1);
+        }
+    }
+
     @Override
     public LinkedList<Person> getVictims() {
         return victims;

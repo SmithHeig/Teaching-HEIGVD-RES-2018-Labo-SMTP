@@ -6,15 +6,13 @@ public class Mail {
     Person from;
     LinkedList<Person> to;
     LinkedList<Person> cc;
-    String subject;
-    String content;
+    String message;
 
-    public Mail(Person from, LinkedList<Person> to, LinkedList<Person> cc, String subject, String content){
+    public Mail(Person from, LinkedList<Person> to, LinkedList<Person> cc, String message){
         this.from = from;
         this.to = to;
         this.cc = cc;
-        this.subject = subject;
-        this.content = content;
+        this.message = message;
     }
 
     public Person getFrom() {
@@ -29,9 +27,5 @@ public class Mail {
         return cc;
     }
 
-    public String getSubject() {
-        return subject;
-    }
-
-    public String getContent(){return content;}
+    public String getMessage(){return message;}
 }
