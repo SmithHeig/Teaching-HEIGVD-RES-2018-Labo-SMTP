@@ -32,12 +32,22 @@ Le *MailRobot* va générer une "Prank" qui et un mail par groupe qui sera gén�
 
 ### MockMock
 
+## Install
+
+- Aller dans /MockMock/MockMock/
+
+- Exécuter en ligne de commande:
+
+  ```bash
+  mvn clean install
+  ```
+
 #### Run
 
 - Aller dans le dossier /MockMock/MockMock/target/
 
 
-- Lancer le jar:
+- Lancer le *jar*:
 
   ```bash
   java -jar MockMock-1.4.0.one-jar -p 2525
