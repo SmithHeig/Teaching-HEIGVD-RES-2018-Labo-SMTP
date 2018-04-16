@@ -32,7 +32,9 @@ Le *MailRobot* va générer une "Prank" qui et un mail par groupe qui sera gén�
 
 ### MockMock
 
-## Install
+## Build
+
+**Les deux prochaines étapes sont dans le cas ou vous faite un nouveau pull du serveur MockMock**
 
 - Aller dans /MockMock/MockMock/
 
@@ -42,19 +44,20 @@ Le *MailRobot* va générer une "Prank" qui et un mail par groupe qui sera gén�
   mvn clean install
   ```
 
-#### Run
+- Aller dans target et le copier dans ./docker-server/src/
 
-- Aller dans le dossier /MockMock/MockMock/target/
+## Run avec Docker ligne de commande
 
-
-- Lancer le *jar*:
+- Lancer les commandes suivante depuis la racine du projet:
 
   ```bash
-  java -jar MockMock-1.4.0.one-jar -p 2525
+  docker build -t labo3-server-smtp ./docker-server
+  docker run -p 2525:2525 -p 8282:8282 labo3-server-smtp
   ```
 
-  Ou le *-p* permet de spécifier le port sur lequel le serveur va écouter. Dois matcher avec le port mis dans *config.properties*
+- Le *2525:2525* represente le port configuré pour votre serveur
 
+- Le *8282:8282* est pour accéder à l'interface web du MockMock
 
 ## Credits
 
