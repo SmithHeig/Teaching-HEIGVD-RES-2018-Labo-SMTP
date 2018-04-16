@@ -36,7 +36,7 @@ public class SMTPClient implements client.ISMTPClient {
             clientSocket = new Socket(serverAdress, serverPort);
             reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             writer = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-            skipServerMessage(); // skip welcome messages
+            skipServerMessage("220 "); // skip welcome messages
 
             LOG.log(Level.INFO, "Connected to the server");
         } catch(IOException e){
@@ -65,23 +65,23 @@ public class SMTPClient implements client.ISMTPClient {
             LOG.log(Level.INFO, "### Start to send emails");
 
             // EHLO
-            sendToServer("EHLO local");
+            sendToServer("EHLO local", "250 ");
 
             // MAIL FROM
-            sendToServer("MAIL FROM: " + mail.getFrom().getEmail());
+            sendToServer("MAIL FROM: " + mail.getFrom().getEmail(), "250 ");
 
             // MAIL TO
             for (Person p : mail.getTo()) {
-                sendToServer("RCPT TO: " + p.getEmail());
+                sendToServer("RCPT TO: " + p.getEmail(), "250 ");
             }
 
             // MAIL CC
             for (Person p : mail.getCc()) {
-                sendToServer("RCPT TO: " + p.getEmail());
+                sendToServer("RCPT TO: " + p.getEmail(), "250 ");
             }
 
             // DATA
-            sendToServer("DATA");
+            sendToServer("DATA", "354");
 
             // DATA content
 
@@ -99,12 +99,12 @@ public class SMTPClient implements client.ISMTPClient {
                 s += scanner.nextLine() + "\r\n";
             }
             s += ".";
-            sendToServer(s);
+            sendToServer(s,"250 ");
 
 
             LOG.log(Level.INFO, "Mail send");
 
-            sendToServer("quit");
+            sendToServer("quit","221 ");
             disconnect();
         }
         LOG.log(Level.INFO, "All mails send");
@@ -123,34 +123,24 @@ public class SMTPClient implements client.ISMTPClient {
         }
         return s;
     }
-    private void skipServerMessage(){
+    private void skipServerMessage(String codeOk){
         try {
             String line;
-            line = reader.readLine();
-            LOG.log(Level.INFO,"Server message skipped: " + line);
+            do {
+                line = reader.readLine();
+                LOG.log(Level.INFO, "Server message skipped: " + line);
+                LOG.log(Level.INFO, String.valueOf(line.contains(codeOk)));
+
+            } while(!line.contains(codeOk));
         } catch (IOException e){
             LOG.log(Level.SEVERE, "Unable to read the server datas: " + e);
         }
     }
 
-    private void skipServerMessage(int nbSkip){
-        for(int i = 0; i < nbSkip; ++i){
-            skipServerMessage();
-        }
-    }
-
-    private void sendToServer(String s){
+    private void sendToServer(String s, String returnMessageFromServer){
         writer.print(s + "\r\n");
         writer.flush();
-        waitServer();
-        System.out.println(s);
-    }
-
-    private void waitServer(){
-        try {
-            Thread.sleep(10);
-        }catch(InterruptedException e){
-
-        }
+        skipServerMessage(returnMessageFromServer);
+        LOG.log(Level.INFO, s);
     }
 }
