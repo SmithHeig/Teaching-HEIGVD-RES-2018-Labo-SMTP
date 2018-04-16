@@ -1,3 +1,9 @@
+/**
+ * ConfigurationManager.java
+ * @authors James Smith and Jérémie Chatillon
+ * Read all the configurations files and store them
+ */
+
 package configurationManager;
 
 import model.mail.Person;
@@ -14,6 +20,7 @@ import java.util.logging.Logger;
 public class ConfigurationManager implements IConfigurationManager {
     private final static Logger LOG = Logger.getLogger(ConfigurationManager.class.getName());
 
+    // CONFIGURATION FO THE APPLICATION
     private String serverAdress;
     private int serverPort;
     private LinkedList<Person> victims;
@@ -21,6 +28,10 @@ public class ConfigurationManager implements IConfigurationManager {
     private LinkedList<String> messages;
     private int nbGroups;
 
+    /**
+     * Constructor
+     * Read all the config files
+     */
     public ConfigurationManager(){
         try {
             // initialisation
@@ -40,6 +51,11 @@ public class ConfigurationManager implements IConfigurationManager {
         }
     }
 
+    /**
+     * Load the priorities of the run
+     * @param file - file .properties with all the data usefull to the application
+     * @throws IOException - if file do not exist
+     */
     private void loadProperties(String file) throws IOException {
         FileInputStream in = new FileInputStream(file);
         Properties properties = new Properties();
@@ -59,6 +75,11 @@ public class ConfigurationManager implements IConfigurationManager {
         LOG.log(Level.INFO, "Properties loaded...");
     }
 
+    /**
+     * Load the email adresse from file.
+     * @param file - file content all the email. Each email on a line
+     * @throws IOException - if file do not exist
+     */
     public void loadAdressesFromFile(String file) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         String s;
@@ -69,6 +90,12 @@ public class ConfigurationManager implements IConfigurationManager {
         LOG.log(Level.INFO,"Email Adresses loaded");
     }
 
+    /**
+     * Load all the message from a file
+     * @param file - fil content all the message.
+     *             Each message should start with Subject: <the subject> and finish with the seperation ==
+     * @throws IOException - if file do not exist
+     */
     public void loadMessageFromFile(String file) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         String s;
@@ -85,6 +112,9 @@ public class ConfigurationManager implements IConfigurationManager {
         LOG.log(Level.INFO,"Message Loaded");
     }
 
+    /**
+     * Verify if the number of groups have enogh victims (min 3)
+     */
     private void verify(){
         // Test if enogh number of victims compare to nb groups
         if(victims.size() / nbGroups < 3){
@@ -93,31 +123,55 @@ public class ConfigurationManager implements IConfigurationManager {
         }
     }
 
+    /**
+     * getter - the list of victims (emails)
+     * @return list of emails
+     */
     @Override
     public LinkedList<Person> getVictims() {
         return victims;
     }
 
+    /**
+     * getter - the list of person on Cc
+     * @return list of emails
+     */
     @Override
     public LinkedList<Person> getCCPerson() {
         return cc;
     }
 
+    /**
+     * getter - List of message
+     * @return list of strings (messages)
+     */
     @Override
     public LinkedList<String> getMessage() {
         return messages;
     }
 
+    /**
+     * getter - the server adress
+     * @return String - addresse of the server
+     */
     @Override
     public String getServerAdress() {
         return serverAdress;
     }
 
+    /**
+     * getter - the server port
+     * @return port of the server
+     */
     @Override
     public int getServerPort() {
         return serverPort;
     }
 
+    /**
+     * getter - number of groups
+     * @return the number of groups contain in the properties
+     */
     @Override
     public int getNbGroups() {
         return nbGroups;

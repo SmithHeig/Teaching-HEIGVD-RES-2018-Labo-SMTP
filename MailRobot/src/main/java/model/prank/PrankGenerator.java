@@ -1,3 +1,6 @@
+/**
+ * PrankGenerator.java
+ */
 package model.prank;
 
 import client.SMTPClient;
@@ -9,8 +12,9 @@ import java.util.LinkedList;
 import java.util.logging.*;
 
 public class PrankGenerator {
-
     private static final Logger LOG = Logger.getLogger(PrankGenerator.class.getName());
+
+    // ATTRIBUTS
     private ConfigurationManager configurationManager;
 
     private LinkedList<Person> victims;
@@ -19,12 +23,20 @@ public class PrankGenerator {
     Prank prank;
     SMTPClient client;
 
+    /**
+     * Constructor
+     * Init the configuration manager and create an SMTP client
+     */
     public PrankGenerator(){
         this.configurationManager = new ConfigurationManager();
         client = new SMTPClient(configurationManager.getServerAdress(),configurationManager.getServerPort());
         LOG.log(Level.INFO, "PrankGenerator Created");
     }
 
+    /**
+     * generate a prank
+     * @return a prank generate with the config files
+     */
     public Prank generatePrank(){
         LOG.log(Level.INFO, "Genarating pranks...");
         victims = configurationManager.getVictims();
@@ -46,15 +58,26 @@ public class PrankGenerator {
         return prank;
     }
 
+    /**
+     * run the prank generate
+     */
     public void runPrank(){
         LOG.log(Level.INFO, "Running prank...");
         prank.run();
     }
 
+    /**
+     * return the prank generate
+     * @return
+     */
     public Prank getPrank(){
         return prank;
     }
 
+    /**
+     * utils - return a random person from the victims. Delete it from the list
+     * @return Person random
+     */
     private Person pickRandomPerson(){
         int indexPerson = randomGenerator(victims.size()) - 1;
         Person p = victims.get(indexPerson);
@@ -62,6 +85,10 @@ public class PrankGenerator {
         return p;
     }
 
+    /**
+     * utils - return a random messge from the list of message
+     * @return
+     */
     private String pickRandomMessage(){
         int indexMessage = randomGenerator(messages.size()) - 1;
         String message = messages.get(indexMessage);
@@ -69,6 +96,11 @@ public class PrankGenerator {
         return message;
     }
 
+    /**
+     * utils - generate a random number
+     * @param max - number max generated
+     * @return int random
+     */
     private int randomGenerator(int max){
         int randomGen = (int)(1 + Math.random() * max);
         return randomGen;

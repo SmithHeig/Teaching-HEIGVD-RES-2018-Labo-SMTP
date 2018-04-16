@@ -1,3 +1,7 @@
+/**
+ * SMTPClient.java
+ * @authors James Smith and Jérémie Chatillon
+ */
 package client;
 
 import model.mail.Group;
@@ -11,14 +15,16 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class SMTPClient implements client.ISMTPClient {
     private final static Logger LOG = Logger.getLogger(SMTPClient.class.getName());
 
+    // SERVER COMMUNICATION
     private Socket clientSocket;
     private BufferedReader reader;
     private PrintWriter writer;
 
-
+    // SERVER ATTRIBUTS
     private String serverAdress;
     private int serverPort;
 
@@ -29,6 +35,10 @@ public class SMTPClient implements client.ISMTPClient {
         LOG.log(Level.INFO, "SMTPClient created...");
     }
 
+    /**
+     * Make the connection to the SMTP server and create the Streams to communicat with him
+     * Skip the Hello Message
+     */
     private void connect(){
         try {
             LOG.log(Level.INFO, "Try to connect to server " + serverAdress + " on port " + serverPort);
@@ -45,6 +55,10 @@ public class SMTPClient implements client.ISMTPClient {
         }
     }
 
+    /**
+     * Disconnect the client from the server
+     * Close all the streams
+     */
     private void disconnect(){
         try {
             clientSocket.close();
@@ -56,6 +70,10 @@ public class SMTPClient implements client.ISMTPClient {
         }
     }
 
+    /**
+     * Function to send mails.
+     * @param mails - Take the mails to send
+     */
     @Override
     public void sendMail(Mail ... mails) {
 
@@ -84,17 +102,12 @@ public class SMTPClient implements client.ISMTPClient {
             sendToServer("DATA", "354");
 
             // DATA content
-
             String s = new String();
             s += "From: " + mail.getFrom().getEmail() + "\r\n";
             s += "To: " + convertListPersonToString(mail.getTo()) + "\r\n";
             s += "Cc: " + convertListPersonToString(mail.getCc()) + "\r\n";
-            /*sendToServer("From: " + mail.getFrom().getEmail());
-            sendToServer("To: " + convertListPersonToString(mail.getTo()));
-            sendToServer("Cc: " );*/
 
             Scanner scanner = new Scanner(mail.getMessage());
-            //LOG.log(Level.INFO,"----------------" + mail.getMessage());
             while (scanner.hasNext()) {
                 s += scanner.nextLine() + "\r\n";
             }
@@ -110,7 +123,11 @@ public class SMTPClient implements client.ISMTPClient {
         LOG.log(Level.INFO, "All mails send");
     }
 
-
+    /**
+     * Convert a list of Person into a String seperate with a comma (usefull to make the list of Person to send or cc
+     * @param persons - the list of person to convert
+     * @return A String with all the person email seperate by a comma
+     */
     private String convertListPersonToString(LinkedList<Person> persons){
         String s = new String();
         for(Person p: persons){
@@ -123,20 +140,47 @@ public class SMTPClient implements client.ISMTPClient {
         }
         return s;
     }
+
+    /**
+     * Skip and read the messages return from the server
+     * @param codeOk - The code we want the server to return us to continue to the next step
+     */
     private void skipServerMessage(String codeOk){
         try {
             String line;
             do {
                 line = reader.readLine();
                 LOG.log(Level.INFO, "Server message skipped: " + line);
-                LOG.log(Level.INFO, String.valueOf(line.contains(codeOk)));
-
-            } while(!line.contains(codeOk));
+                if(checkError(line)){
+                    System.exit(-1);
+                }
+            } while(!line.contains(codeOk)); // Read all the message until the ok message
         } catch (IOException e){
             LOG.log(Level.SEVERE, "Unable to read the server datas: " + e);
         }
     }
 
+    /**
+     * Check if the server return an error (just check the knowed error)
+     * @param s - return message from server
+     * @return if the return message is an error
+     */
+    private boolean checkError(String s){
+        if(s.contains("501")){
+            LOG.log(Level.SEVERE, s);
+            return true;
+        } else  if(s.contains("421 ")){
+            LOG.log(Level.SEVERE, s);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Function to send a command to the server and will skip the return message
+     * @param s - the cmd to send to the server
+     * @param returnMessageFromServer - the message we want from the server
+     */
     private void sendToServer(String s, String returnMessageFromServer){
         writer.print(s + "\r\n");
         writer.flush();

@@ -1,7 +1,14 @@
+/**
+ * Interface ISMTPClient.java
+ */
 package client;
 
 import model.mail.Mail;
 
+/**
+ * Interface ISMTPClient
+ */
 public interface ISMTPClient {
-    public void sendMail(Mail ... mails);
+    // Function to Mails
+    void sendMail(Mail ... mails);
 }

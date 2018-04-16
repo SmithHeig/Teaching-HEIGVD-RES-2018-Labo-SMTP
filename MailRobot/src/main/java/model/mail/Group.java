@@ -1,3 +1,7 @@
+/**
+ * Group.java
+ * @authors James Smith and Jérémie Chatillon
+ */
 package model.mail;
 
 import java.io.*;
@@ -8,9 +12,15 @@ import java.util.logging.Logger;
 public class Group {
     private static final Logger LOG = Logger.getLogger(Group.class.getName());
 
+    // ATTRIBUTS
     Person sender;
     LinkedList<Person> receivers;
 
+    /**
+     * Constructeur by attributs
+     * @param sender - the sender Person of the mail
+     * @param receivers the receivers of the mail
+     */
     public Group(Person sender, LinkedList<Person> receivers) {
         if(receivers.size() < 2){
             LOG.log(Level.SEVERE, "Wrong number of recivers");
@@ -21,6 +31,11 @@ public class Group {
         this.receivers = receivers;
     }
 
+    /**
+     * Constructeur by a file
+     * @param file -file contain the groups
+     * @remarks not used in this project
+     */
     public Group(String file) {
         try {
             String s;
@@ -35,10 +50,18 @@ public class Group {
 
     }
 
+    /**
+     * Return the sender of the group
+     * @return Person - the sender of the email
+     */
     public Person Sender(){
         return sender;
     }
 
+    /**
+     * Return the recievers of the email
+     * @return List of Person
+     */
     public LinkedList<Person> getReceivers() {
         return receivers;
     }
