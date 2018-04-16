@@ -45,3 +45,7 @@ Le *MailRobot* va générer une "Prank" qui et un mail par groupe qui sera gén�
 
   Ou le *-p* permet de spécifier le port sur lequel le serveur va écouter. Dois matcher avec le port mis dans *config.properties*
 
+
+## Credits
+
+Ce projet fut réalisé dans le cadre du cours RES 2018 à l'HEIG-VD en *pair programming* par Jérémie Chatillon et James Smith. 
