@@ -5,13 +5,15 @@
 package model.mail;
 
 import java.util.LinkedList;
+import java.util.Scanner;
 
 public class Mail {
     // ATTRIBUTS OF A MAIL
-    Person from;
-    LinkedList<Person> to;
-    LinkedList<Person> cc;
-    String message;
+    private Person from;
+    private LinkedList<Person> to;
+    private LinkedList<Person> cc;
+    private String content;
+    private String subject;
 
     /**
      * Constructor
@@ -24,7 +26,8 @@ public class Mail {
         this.from = from;
         this.to = to;
         this.cc = cc;
-        this.message = message;
+        setSubject(message);
+        setContent(message);
     }
 
     /**
@@ -55,5 +58,20 @@ public class Mail {
      * return the message who will be send
      * @return String message
      */
-    public String getMessage(){return message;}
+    public String getContent(){return content;}
+
+    public String getSubject(){return subject;}
+
+
+    private void setSubject(String message){
+        Scanner scanner = new Scanner(message);
+        String firstLine = scanner.nextLine();
+        int index = firstLine.indexOf(": ");
+        subject = firstLine.substring(index + 2, firstLine.length());
+        System.out.println(subject);
+    }
+
+    private void setContent(String message){
+        content = message.substring(message.indexOf("\n") + 1, message.length());
+    }
 }

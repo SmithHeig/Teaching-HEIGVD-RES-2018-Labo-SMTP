@@ -10,6 +10,7 @@ import model.mail.Person;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Base64;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -103,11 +104,13 @@ public class SMTPClient implements client.ISMTPClient {
 
             // DATA content
             String s = new String();
+            s += "Content-Type: text/plain; charset=utf-8\r\n";
             s += "From: " + mail.getFrom().getEmail() + "\r\n";
             s += "To: " + convertListPersonToString(mail.getTo()) + "\r\n";
             s += "Cc: " + convertListPersonToString(mail.getCc()) + "\r\n";
+            s += "Subject: =?UTF-8?B?" + Base64.getEncoder().encodeToString(mail.getSubject().getBytes()) + "?=\r\n";
 
-            Scanner scanner = new Scanner(mail.getMessage());
+            Scanner scanner = new Scanner(mail.getContent());
             while (scanner.hasNext()) {
                 s += scanner.nextLine() + "\r\n";
             }
