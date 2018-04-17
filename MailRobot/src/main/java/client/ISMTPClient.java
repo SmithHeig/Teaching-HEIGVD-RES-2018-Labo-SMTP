@@ -1,5 +1,6 @@
 /**
  * Interface ISMTPClient.java
+ * @authors James Smith and Jérémie Chatillon
  */
 package client;
 

@@ -1,5 +1,6 @@
 /**
  * PrankGenerator.java
+ * @authors James Smith and Jérémie Chatillon
  */
 package model.prank;
 
