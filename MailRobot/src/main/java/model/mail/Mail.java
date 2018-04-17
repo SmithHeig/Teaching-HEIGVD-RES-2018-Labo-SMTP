@@ -60,9 +60,17 @@ public class Mail {
      */
     public String getContent(){return content;}
 
+    /**
+     * getter - return subject of the mail
+     * @return String
+     */
     public String getSubject(){return subject;}
 
 
+    /**
+     * Will pick the subject of the message stores in the file
+     * @param message - message store in the file
+     */
     private void setSubject(String message){
         Scanner scanner = new Scanner(message);
         String firstLine = scanner.nextLine();
@@ -70,6 +78,10 @@ public class Mail {
         subject = firstLine.substring(index + 2, firstLine.length());
     }
 
+    /**
+     * Will pick the content of the emil stored in the file
+     * @param message - message stored in the file
+     */
     private void setContent(String message){
         content = message.substring(message.indexOf("\n") + 1, message.length());
     }
