@@ -68,7 +68,6 @@ public class Mail {
         String firstLine = scanner.nextLine();
         int index = firstLine.indexOf(": ");
         subject = firstLine.substring(index + 2, firstLine.length());
-        System.out.println(subject);
     }
 
     private void setContent(String message){
