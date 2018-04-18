@@ -26,6 +26,10 @@ Pour lancé l'application, il faut configurer les fichiers suivant du dossier ./
 
   - Contient les email (ligne par ligne) des victims du spam
 
+##### Note
+
+Le dossier config est obligatoire pour lancer l'application et doit être situé à la racine de l'exécution de l'application.
+
 ### Propriétés
 
 Le *MailRobot* va générer une "Prank" qui et un mail par groupe qui sera généré automatiquement et aléatoirement grâce au fichier *messsage.utf8* et *victimes.utf8*.

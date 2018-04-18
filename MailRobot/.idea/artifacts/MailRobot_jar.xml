@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MailRobot:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/MailRobot_jar</output-path>
+    <root id="archive" name="MailRobot.jar">
+      <element id="module-output" name="MailRobot" />
+    </root>
+  </artifact>
+</component>
